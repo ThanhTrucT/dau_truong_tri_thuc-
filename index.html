@@ -1025,8 +1025,73 @@
             </div>
 
             <button class="action-btn" onclick="validateAndStart()">Bắt đầu thử thách 🚀</button>
+        </div> <div id="auth-screen" class="screen">
+
+        <h2>Đăng nhập hệ thống</h2>
+
+        <div class="auth-tabs">
+            <button id="tab-login"
+                    onclick="switchAuthTab('login')">
+                Đăng nhập
+            </button>
+
+            <button id="tab-register"
+                    onclick="switchAuthTab('register')">
+                Đăng ký
+            </button>
         </div>
 
+        <div id="login-form">
+
+            <input
+                id="login-username"
+                placeholder="Tên đăng nhập">
+
+            <input
+                id="login-password"
+                type="password"
+                placeholder="Mật khẩu">
+
+            <div id="login-error"></div>
+
+            <button onclick="handleLogin()">
+                Đăng nhập
+            </button>
+
+        </div>
+
+        <div id="register-form"
+            style="display:none;">
+
+            <input
+                id="reg-displayname"
+                placeholder="Họ tên">
+
+            <input
+                id="reg-username"
+                placeholder="Tên đăng nhập">
+
+            <input
+                id="reg-password"
+                type="password"
+                placeholder="Mật khẩu">
+
+            <input
+                id="reg-password2"
+                type="password"
+                placeholder="Nhập lại mật khẩu">
+
+            <div id="register-error"></div>
+
+            <div id="register-success"></div>
+
+            <button onclick="handleRegister()">
+                Đăng ký
+            </button>
+
+        </div>
+
+    </div>  
         <!-- MÀN HÌNH CHƠI GAME (MẶC ĐỊNH ẨN) -->
         <div id="quiz-area" style="display: none;">
             <div class="stats-bar">
@@ -1327,6 +1392,27 @@
             document.getElementById(id).style.display = id === screenId ? 'block' : 'none';
         });
     }
+        
+    function showScreen(screenId) {
+
+    const screens = [
+        'auth-screen',
+        'welcome-screen',
+        'quiz-area',
+        'result-screen'
+    ];
+
+    screens.forEach(id => {
+
+        const el = document.getElementById(id);
+
+        if (el) {
+            el.style.display =
+                id === screenId ? 'block' : 'none';
+        }
+
+    });
+}
 
     async function showWelcomeScreen() {
         if (!_currentUser) { showScreen('auth-screen'); return; }
@@ -1678,6 +1764,40 @@
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
+        }
+        window.onload = function() {
+
+            cumulativeScore = parseInt(
+                localStorage.getItem("arctic_cumulative_score") || "0"
+            );
+
+            playerName =
+                localStorage.getItem("arctic_player_name") || "";
+
+            if (
+                document.getElementById("player-name") &&
+                playerName
+            ) {
+                document.getElementById("player-name").value =
+                    playerName;
+            }
+
+            updateDashboardUI();
+
+            // Hiện login trước
+            showScreen("auth-screen");
+
+        }; // kết thúc window.onload ở đây
+
+        function initAudio() {
+
+            if (!audioCtx) {
+                audioCtx = new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+            }
+
         }
 
         function playSound(isCorrect) {
