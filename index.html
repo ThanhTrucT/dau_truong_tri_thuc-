@@ -2125,14 +2125,17 @@
             });
         }
 
-        function claimReward(rewardId) {
+        function claimReward(rewardId, totalScore) {
             initAudio();
             const reward = rewardsList.find(r => r.id === rewardId);
-            if (!reward || cumulativeScore < reward.points) return;
+            if (!reward || totalScore < reward.points) return;
 
-            const modalBody = document.getElementById("modal-body-content");
-            
-            if (reward.type === "certificate") {
+            const modalBody = document.getElementById('modal-body-content');
+            const user = getCurrentUser();
+            const playerName = user ? user.displayName : 'Vô Danh Sĩ Tử';
+            const cumulativeScore = user ? user.totalScore : totalScore;
+
+            if (reward.type === 'certificate') {
                 const currentDate = new Date().toLocaleDateString('vi-VN');
                 modalBody.innerHTML = `
                     <div class="certificate-container">
@@ -2140,15 +2143,14 @@
                             <div class="certificate-header-icon">👑</div>
                             <div class="certificate-title">BẢNG VÀNG DANH DỰ</div>
                             <div class="certificate-subtitle">TRẠNG NGUYÊN TRI THỨC</div>
-                            
                             <div style="font-size: 13px; color: #666; font-style: italic;">Chứng nhận danh vị thuộc về Sĩ tử:</div>
-                            <div class="certificate-recipient">${playerName || "Vô Danh Sĩ Tử"}</div>
-                            
+                            <div class="certificate-recipient">${playerName}</div>
                             <div class="certificate-body">
-                                Đã hoàn thành xuất sắc các chặng thử thách, tích lũy đạt cột mốc huy hoàng <strong>${cumulativeScore} điểm</strong> trên <strong>Đấu Trường Tri Thức Arctic Aurora</strong>. <br>
+                                Đã hoàn thành xuất sắc các chặng thử thách, tích lũy đạt cột mốc huy hoàng
+                                <strong>${cumulativeScore} điểm</strong> trên
+                                <strong>Đấu Trường Tri Thức Arctic Aurora</strong>.<br>
                                 Ghi nhận tài năng và ý chí bền bỉ trên con đường chinh phục đỉnh cao học thuật.
                             </div>
-                            
                             <div class="certificate-footer">
                                 <div class="certificate-sig-box" style="text-align: left;">
                                     <strong>Ngày cấp:</strong><br>
@@ -2169,9 +2171,9 @@
                 modalBody.innerHTML = reward.content;
             }
 
-            document.getElementById("custom-modal").style.display = "flex";
+            document.getElementById('custom-modal').style.display = 'flex';
             playSound(true);
-        }
+}
 
         function closeModal() {
             document.getElementById("custom-modal").style.display = "none";
